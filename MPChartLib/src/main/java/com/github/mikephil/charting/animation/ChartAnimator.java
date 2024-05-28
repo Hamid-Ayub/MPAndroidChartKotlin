@@ -27,7 +27,6 @@ public class ChartAnimator {
 
     public ChartAnimator() { }
 
-    @RequiresApi(11)
     public ChartAnimator(AnimatorUpdateListener listener) {
         mListener = listener;
     }
