@@ -37,7 +37,7 @@ public abstract class BarLineScatterCandleBubbleDataSet<T extends Entry>
     }
 
     @Override
-    public int getHighLightColor() {
+    public int highLightColor() {
         return mHighLightColor;
     }
 

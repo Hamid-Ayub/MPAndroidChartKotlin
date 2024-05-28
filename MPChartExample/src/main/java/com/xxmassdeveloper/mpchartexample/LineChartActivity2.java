@@ -388,8 +388,7 @@ public class LineChartActivity2 extends DemoBase implements OnSeekBarChangeListe
     public void onValueSelected(Entry e, Highlight h) {
         Log.i("Entry selected", e.toString());
 
-        chart.centerViewToAnimated(e.getX(), e.getY(), chart.getData().getDataSetByIndex(h.getDataSetIndex())
-                .getAxisDependency(), 500);
+        chart.centerViewToAnimated(e.getX(), e.getY(), chart.getData().getDataSetByIndex(h.getDataSetIndex()).getAxisDependency(), 500);
         //chart.zoomAndCenterAnimated(2.5f, 2.5f, e.getX(), e.getY(), chart.getData().getDataSetByIndex(dataSetIndex)
         // .getAxisDependency(), 1000);
         //chart.zoomAndCenterAnimated(1.8f, 1.8f, e.getX(), e.getY(), chart.getData().getDataSetByIndex(dataSetIndex)

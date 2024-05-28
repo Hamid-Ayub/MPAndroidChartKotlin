@@ -1,22 +1,16 @@
-package com.github.mikephil.charting.components;
+package com.github.mikephil.charting.components
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.RelativeLayout;
-
-import com.github.mikephil.charting.charts.Chart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.utils.FSize;
-import com.github.mikephil.charting.utils.MPPointF;
-
-import java.lang.ref.WeakReference;
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
+import android.os.Build
+import com.github.mikephil.charting.charts.Chart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.utils.FSize
+import com.github.mikephil.charting.utils.MPPointF
+import java.lang.ref.WeakReference
 
 /**
  * View that can be displayed when selecting values in the chart. Extend this class to provide custom layouts for your
@@ -24,17 +18,15 @@ import java.lang.ref.WeakReference;
  *
  * @author Philipp Jahoda
  */
-public class MarkerImage implements IMarker {
+class MarkerImage(private val mContext: Context, drawableResourceId: Int) : IMarker {
+    private var mDrawable: Drawable? = null
 
-    private Context mContext;
-    private Drawable mDrawable;
+    private var mOffset: MPPointF? = MPPointF()
+    private val mOffset2 = MPPointF()
+    private var mWeakChart: WeakReference<Chart<*>>? = null
 
-    private MPPointF mOffset = new MPPointF();
-    private MPPointF mOffset2 = new MPPointF();
-    private WeakReference<Chart> mWeakChart;
-
-    private FSize mSize = new FSize();
-    private Rect mDrawableBoundsCache = new Rect();
+    private var mSize: FSize? = FSize()
+    private val mDrawableBoundsCache = Rect()
 
     /**
      * Constructor. Sets up the MarkerView with a custom layout resource.
@@ -42,126 +34,108 @@ public class MarkerImage implements IMarker {
      * @param context
      * @param drawableResourceId the drawable resource to render
      */
-    public MarkerImage(Context context, int drawableResourceId) {
-        mContext = context;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            mDrawable = mContext.getResources().getDrawable(drawableResourceId, null);
-        }
-        else
-        {
-            mDrawable = mContext.getResources().getDrawable(drawableResourceId);
+    init {
+        mDrawable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mContext.resources.getDrawable(drawableResourceId, null)
+        } else {
+            mContext.resources.getDrawable(drawableResourceId)
         }
     }
 
-    public void setOffset(MPPointF offset) {
-        mOffset = offset;
+    fun setOffset(offsetX: Float, offsetY: Float) {
+        mOffset!!.x = offsetX
+        mOffset!!.y = offsetY
+    }
 
-        if (mOffset == null) {
-            mOffset = new MPPointF();
+    override var offset: MPPointF?
+        get() = mOffset
+        set(offset) {
+            mOffset = offset
+
+            if (mOffset == null) {
+                mOffset = MPPointF()
+            }
         }
-    }
 
-    public void setOffset(float offsetX, float offsetY) {
-        mOffset.x = offsetX;
-        mOffset.y = offsetY;
-    }
+    var size: FSize?
+        get() = mSize
+        set(size) {
+            mSize = size
 
-    @Override
-    public MPPointF getOffset() {
-        return mOffset;
-    }
-
-    public void setSize(FSize size) {
-        mSize = size;
-
-        if (mSize == null) {
-            mSize = new FSize();
+            if (mSize == null) {
+                mSize = FSize()
+            }
         }
-    }
 
-    public FSize getSize() {
-        return mSize;
-    }
-
-    public void setChartView(Chart chart) {
-        mWeakChart = new WeakReference<>(chart);
-    }
-
-    public Chart getChartView() {
-        return mWeakChart == null ? null : mWeakChart.get();
-    }
-
-    @Override
-    public MPPointF getOffsetForDrawingAtPoint(float posX, float posY) {
-
-        MPPointF offset = getOffset();
-        mOffset2.x = offset.x;
-        mOffset2.y = offset.y;
-
-        Chart chart = getChartView();
-
-        float width = mSize.width;
-        float height = mSize.height;
-
-        if (width == 0.f && mDrawable != null) {
-            width = mDrawable.getIntrinsicWidth();
+    var chartView: Chart<*>?
+        get() = if (mWeakChart == null) null else mWeakChart!!.get()
+        set(chart) {
+            mWeakChart = WeakReference(chart)
         }
-        if (height == 0.f && mDrawable != null) {
-            height = mDrawable.getIntrinsicHeight();
+
+    override fun getOffsetForDrawingAtPoint(posX: Float, posY: Float): MPPointF? {
+        val offset = offset!!
+        mOffset2.x = offset.x
+        mOffset2.y = offset.y
+
+        val chart = chartView
+
+        var width = mSize!!.width
+        var height = mSize!!.height
+
+        if (width == 0f && mDrawable != null) {
+            width = mDrawable!!.getIntrinsicWidth().toFloat()
+        }
+        if (height == 0f && mDrawable != null) {
+            height = mDrawable!!.getIntrinsicHeight().toFloat()
         }
 
         if (posX + mOffset2.x < 0) {
-            mOffset2.x = - posX;
-        } else if (chart != null && posX + width + mOffset2.x > chart.getWidth()) {
-            mOffset2.x = chart.getWidth() - posX - width;
+            mOffset2.x = -posX
+        } else if (chart != null && posX + width + mOffset2.x > chart.width) {
+            mOffset2.x = chart.width - posX - width
         }
 
         if (posY + mOffset2.y < 0) {
-            mOffset2.y = - posY;
-        } else if (chart != null && posY + height + mOffset2.y > chart.getHeight()) {
-            mOffset2.y = chart.getHeight() - posY - height;
+            mOffset2.y = -posY
+        } else if (chart != null && posY + height + mOffset2.y > chart.height) {
+            mOffset2.y = chart.height - posY - height
         }
 
-        return mOffset2;
+        return mOffset2
     }
 
-    @Override
-    public void refreshContent(Entry e, Highlight highlight) {
-
+    override fun refreshContent(e: Entry?, highlight: Highlight?) {
     }
 
-    @Override
-    public void draw(Canvas canvas, float posX, float posY) {
+    override fun draw(canvas: Canvas?, posX: Float, posY: Float) {
+        if (mDrawable == null) return
 
-        if (mDrawable == null) return;
+        val offset = getOffsetForDrawingAtPoint(posX, posY)
 
-        MPPointF offset = getOffsetForDrawingAtPoint(posX, posY);
+        var width = mSize!!.width
+        var height = mSize!!.height
 
-        float width = mSize.width;
-        float height = mSize.height;
-
-        if (width == 0.f) {
-            width = mDrawable.getIntrinsicWidth();
+        if (width == 0f) {
+            width = mDrawable!!.getIntrinsicWidth().toFloat()
         }
-        if (height == 0.f) {
-            height = mDrawable.getIntrinsicHeight();
+        if (height == 0f) {
+            height = mDrawable!!.getIntrinsicHeight().toFloat()
         }
 
-        mDrawable.copyBounds(mDrawableBoundsCache);
-        mDrawable.setBounds(
+        mDrawable!!.copyBounds(mDrawableBoundsCache)
+        mDrawable!!.setBounds(
                 mDrawableBoundsCache.left,
                 mDrawableBoundsCache.top,
-                mDrawableBoundsCache.left + (int)width,
-                mDrawableBoundsCache.top + (int)height);
+                mDrawableBoundsCache.left + width.toInt(),
+                mDrawableBoundsCache.top + height.toInt())
 
-        int saveId = canvas.save();
+        val saveId = canvas!!.save()
         // translate to the correct position and draw
-        canvas.translate(posX + offset.x, posY + offset.y);
-        mDrawable.draw(canvas);
-        canvas.restoreToCount(saveId);
+        canvas.translate(posX + offset!!.x, posY + offset.y)
+        mDrawable!!.draw(canvas)
+        canvas.restoreToCount(saveId)
 
-        mDrawable.setBounds(mDrawableBoundsCache);
+        mDrawable!!.setBounds(mDrawableBoundsCache)
     }
 }

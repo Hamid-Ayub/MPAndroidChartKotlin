@@ -1,25 +1,26 @@
-package com.github.mikephil.charting.interfaces.datasets;
+package com.github.mikephil.charting.interfaces.datasets
 
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.utils.Fill;
-
-import java.util.List;
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.utils.Fill
 
 /**
  * Created by philipp on 21/10/15.
  */
-public interface IBarDataSet extends IBarLineScatterCandleBubbleDataSet<BarEntry> {
+public interface IBarDataSet : IBarLineScatterCandleBubbleDataSet<BarEntry> {
 
-    List<Fill> getFills();
+    //val fills: List<Fill?>
 
-    Fill getFill(int index);
+    fun getFills(): MutableList<Fill>?
+
+    fun getFill(index: Int): Fill
 
     /**
      * Returns true if this DataSet is stacked (stacksize > 1) or not.
      *
      * @return
      */
-    boolean isStacked();
+
+    fun isStacked(): Boolean
 
     /**
      * Returns the maximum number of bars that can be stacked upon another in
@@ -27,7 +28,8 @@ public interface IBarDataSet extends IBarLineScatterCandleBubbleDataSet<BarEntry
      *
      * @return
      */
-    int getStackSize();
+
+    fun stackSize(): Int
 
     /**
      * Returns the color used for drawing the bar-shadows. The bar shadows is a
@@ -35,7 +37,8 @@ public interface IBarDataSet extends IBarLineScatterCandleBubbleDataSet<BarEntry
      *
      * @return
      */
-    int getBarShadowColor();
+
+    fun barShadowColor(): Int
 
     /**
      * Returns the width used for drawing borders around the bars.
@@ -43,14 +46,16 @@ public interface IBarDataSet extends IBarLineScatterCandleBubbleDataSet<BarEntry
      *
      * @return
      */
-    float getBarBorderWidth();
+
+    fun barBorderWidth(): Float
 
     /**
      * Returns the color drawing borders around the bars.
      *
      * @return
      */
-    int getBarBorderColor();
+
+    fun barBorderColor(): Int
 
     /**
      * Returns the alpha value (transparency) that is used for drawing the
@@ -58,7 +63,7 @@ public interface IBarDataSet extends IBarLineScatterCandleBubbleDataSet<BarEntry
      *
      * @return
      */
-    int getHighLightAlpha();
+    fun highLightAlpha(): Int
 
 
     /**
@@ -67,5 +72,6 @@ public interface IBarDataSet extends IBarLineScatterCandleBubbleDataSet<BarEntry
      *
      * @return
      */
-    String[] getStackLabels();
+
+    fun stackLabels(): Array<String>
 }

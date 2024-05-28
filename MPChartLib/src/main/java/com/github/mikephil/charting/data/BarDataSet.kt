@@ -1,95 +1,94 @@
+package com.github.mikephil.charting.data
 
-package com.github.mikephil.charting.data;
+import android.graphics.Color
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.github.mikephil.charting.utils.Fill
 
-import android.graphics.Color;
-
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.Fill;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> implements IBarDataSet {
-
+class BarDataSet(yVals: List<BarEntry>, label: String?) : BarLineScatterCandleBubbleDataSet<BarEntry>(yVals, label), IBarDataSet {
     /**
      * the maximum number of bars that are stacked upon each other, this value
      * is calculated from the Entries that are added to the DataSet
      */
-    private int mStackSize = 1;
+    private var mStackSize = 1
 
     /**
      * the color used for drawing the bar shadows
      */
-    private int mBarShadowColor = Color.rgb(215, 215, 215);
+    private var mBarShadowColor = Color.rgb(215, 215, 215)
 
-    private float mBarBorderWidth = 0.0f;
+    private var mBarBorderWidth = 0.0f
 
-    private int mBarBorderColor = Color.BLACK;
+    private var mBarBorderColor = Color.BLACK
 
     /**
      * the alpha value used to draw the highlight indicator bar
      */
-    private int mHighLightAlpha = 120;
+    private var mHighLightAlpha = 120
 
+    /**
+     * returns the overall entry count, including counting each stack-value
+     * individually
+     *
+     * @return
+     */
     /**
      * the overall entry count, including counting each stack-value individually
      */
-    private int mEntryCountStacks = 0;
+    var entryCountStacks: Int = 0
+        private set
 
     /**
      * array of labels used to describe the different values of the stacked bars
      */
-    private String[] mStackLabels = new String[]{};
+    private var mStackLabels = arrayOf<String>()
 
-    protected List<Fill> mFills = null;
+    protected var mFills: MutableList<Fill>? =null
 
-    public BarDataSet(List<BarEntry> yVals, String label) {
-        super(yVals, label);
 
-        mHighLightColor = Color.rgb(0, 0, 0);
 
-        calcStackSize(yVals);
-        calcEntryCountIncludingStacks(yVals);
+    init {
+
+        mHighLightColor = Color.rgb(0, 0, 0)
+
+        calcStackSize(yVals)
+        calcEntryCountIncludingStacks(yVals)
     }
 
-    @Override
-    public DataSet<BarEntry> copy() {
-        List<BarEntry> entries = new ArrayList<BarEntry>();
-        for (int i = 0; i < mEntries.size(); i++) {
-            entries.add(mEntries.get(i).copy());
+    override fun copy(): DataSet<BarEntry?> {
+        val entries: MutableList<BarEntry> = ArrayList()
+        for (i in mEntries.indices) {
+            entries.add(mEntries[i]!!.copy())
         }
-        BarDataSet copied = new BarDataSet(entries, getLabel());
-        copy(copied);
-        return copied;
+        val copied = BarDataSet(entries, label)
+        copy(copied)
+        return copied
     }
 
-    protected void copy(BarDataSet barDataSet) {
-        super.copy(barDataSet);
-        barDataSet.mStackSize = mStackSize;
-        barDataSet.mBarShadowColor = mBarShadowColor;
-        barDataSet.mBarBorderWidth = mBarBorderWidth;
-        barDataSet.mStackLabels = mStackLabels;
-        barDataSet.mHighLightAlpha = mHighLightAlpha;
+    protected fun copy(barDataSet: BarDataSet) {
+        super.copy(barDataSet)
+        barDataSet.mStackSize = mStackSize
+        barDataSet.mBarShadowColor = mBarShadowColor
+        barDataSet.mBarBorderWidth = mBarBorderWidth
+        barDataSet.mStackLabels = mStackLabels
+        barDataSet.mHighLightAlpha = mHighLightAlpha
     }
 
-    @Override
-    public List<Fill> getFills() {
-        return mFills;
+
+    override fun getFills(): MutableList<Fill>? {
+        return mFills
     }
 
-    @Override
-    public Fill getFill(int index) {
-        return mFills.get(index % mFills.size());
+    override fun getFill(index: Int): Fill {
+        return mFills!![index % mFills!!.size]
     }
 
-    /**
-     * This method is deprecated.
-     * Use getFills() instead.
-     */
-    @Deprecated
-    public List<Fill> getGradients() {
-        return mFills;
-    }
+    @get:Deprecated("")
+    val gradients: List<Fill>?
+        /**
+         * This method is deprecated.
+         * Use getFills() instead.
+         */
+        get() = mFills
 
     /**
      * This method is deprecated.
@@ -97,9 +96,9 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      *
      * @param index
      */
-    @Deprecated
-    public Fill getGradient(int index) {
-        return getFill(index);
+    @Deprecated("")
+    fun getGradient(index: Int): Fill {
+        return getFill(index)
     }
 
     /**
@@ -108,9 +107,10 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      * @param startColor
      * @param endColor
      */
-    public void setGradientColor(int startColor, int endColor) {
-        mFills.clear();
-        mFills.add(new Fill(startColor, endColor));
+    fun setGradientColor(startColor: Int, endColor: Int) {
+        mFills!! .clear()
+        mFills!!.add(Fill(startColor, endColor))
+
     }
 
     /**
@@ -119,9 +119,9 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      *
      * @param gradientColors
      */
-    @Deprecated
-    public void setGradientColors(List<Fill> gradientColors) {
-        this.mFills = gradientColors;
+    @Deprecated("")
+    fun setGradientColors(gradientColors: MutableList<Fill>) {
+        this.mFills = gradientColors
     }
 
     /**
@@ -129,26 +129,22 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      *
      * @param fills
      */
-    public void setFills(List<Fill> fills) {
-        this.mFills = fills;
+    fun setFills(fills: MutableList<Fill>) {
+        this.mFills = fills
     }
 
     /**
      * Calculates the total number of entries this DataSet represents, including
      * stacks. All values belonging to a stack are calculated separately.
      */
-    private void calcEntryCountIncludingStacks(List<BarEntry> yVals) {
+    private fun calcEntryCountIncludingStacks(yVals: List<BarEntry>) {
+        entryCountStacks = 0
 
-        mEntryCountStacks = 0;
+        for (i in yVals.indices) {
+            val vals = yVals[i].yVals
 
-        for (int i = 0; i < yVals.size(); i++) {
-
-            float[] vals = yVals.get(i).getYVals();
-
-            if (vals == null)
-                mEntryCountStacks++;
-            else
-                mEntryCountStacks += vals.length;
+            if (vals == null) entryCountStacks++
+            else entryCountStacks += vals.size
         }
     }
 
@@ -156,60 +152,36 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      * calculates the maximum stacksize that occurs in the Entries array of this
      * DataSet
      */
-    private void calcStackSize(List<BarEntry> yVals) {
+    private fun calcStackSize(yVals: List<BarEntry>) {
+        for (i in yVals.indices) {
+            val vals = yVals[i].yVals
 
-        for (int i = 0; i < yVals.size(); i++) {
-
-            float[] vals = yVals.get(i).getYVals();
-
-            if (vals != null && vals.length > mStackSize)
-                mStackSize = vals.length;
+            if (vals != null && vals.size > mStackSize) mStackSize = vals.size
         }
     }
 
-    @Override
-    protected void calcMinMax(BarEntry e) {
+    override fun calcMinMax(e: BarEntry) {
+        if (e != null && !java.lang.Float.isNaN(e.y)) {
+            if (e.yVals == null) {
+                if (e.y < mYMin) mYMin = e.y
 
-        if (e != null && !Float.isNaN(e.getY())) {
-
-            if (e.getYVals() == null) {
-
-                if (e.getY() < mYMin)
-                    mYMin = e.getY();
-
-                if (e.getY() > mYMax)
-                    mYMax = e.getY();
+                if (e.y > mYMax) mYMax = e.y
             } else {
+                if (-e.negativeSum < mYMin) mYMin = -e.negativeSum
 
-                if (-e.getNegativeSum() < mYMin)
-                    mYMin = -e.getNegativeSum();
-
-                if (e.getPositiveSum() > mYMax)
-                    mYMax = e.getPositiveSum();
+                if (e.positiveSum > mYMax) mYMax = e.positiveSum
             }
 
-            calcMinMaxX(e);
+            calcMinMaxX(e)
         }
     }
 
-    @Override
-    public int getStackSize() {
-        return mStackSize;
+    override fun stackSize(): Int {
+        return mStackSize
     }
 
-    @Override
-    public boolean isStacked() {
-        return mStackSize > 1 ? true : false;
-    }
-
-    /**
-     * returns the overall entry count, including counting each stack-value
-     * individually
-     *
-     * @return
-     */
-    public int getEntryCountStacks() {
-        return mEntryCountStacks;
+    override fun isStacked(): Boolean {
+        return if (mStackSize > 1) true else false
     }
 
     /**
@@ -219,13 +191,12 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      *
      * @param color
      */
-    public void setBarShadowColor(int color) {
-        mBarShadowColor = color;
+    fun setBarShadowColor(color: Int) {
+        mBarShadowColor = color
     }
 
-    @Override
-    public int getBarShadowColor() {
-        return mBarShadowColor;
+    override fun barShadowColor(): Int {
+        return mBarShadowColor
     }
 
     /**
@@ -234,8 +205,8 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      *
      * @return
      */
-    public void setBarBorderWidth(float width) {
-        mBarBorderWidth = width;
+    fun setBarBorderWidth(width: Float) {
+        mBarBorderWidth = width
     }
 
     /**
@@ -244,9 +215,8 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      *
      * @return
      */
-    @Override
-    public float getBarBorderWidth() {
-        return mBarBorderWidth;
+    override fun barBorderWidth(): Float {
+        return mBarBorderWidth
     }
 
     /**
@@ -254,8 +224,8 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      *
      * @return
      */
-    public void setBarBorderColor(int color) {
-        mBarBorderColor = color;
+    fun setBarBorderColor(color: Int) {
+        mBarBorderColor = color
     }
 
     /**
@@ -263,9 +233,8 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      *
      * @return
      */
-    @Override
-    public int getBarBorderColor() {
-        return mBarBorderColor;
+    override fun barBorderColor(): Int {
+        return mBarBorderColor
     }
 
     /**
@@ -274,13 +243,12 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      *
      * @param alpha
      */
-    public void setHighLightAlpha(int alpha) {
-        mHighLightAlpha = alpha;
+    fun setHighLightAlpha(alpha: Int) {
+        mHighLightAlpha = alpha
     }
 
-    @Override
-    public int getHighLightAlpha() {
-        return mHighLightAlpha;
+    override fun highLightAlpha(): Int {
+        return mHighLightAlpha
     }
 
     /**
@@ -288,12 +256,18 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      *
      * @param labels
      */
-    public void setStackLabels(String[] labels) {
-        mStackLabels = labels;
+    fun setStackLabels(labels: Array<String>) {
+        mStackLabels = labels
     }
 
-    @Override
-    public String[] getStackLabels() {
-        return mStackLabels;
+    override fun stackLabels(): Array<String> {
+        return mStackLabels
     }
+
+    override fun getEntryIndex(e: BarEntry): Int {
+        // Implement the logic to get the index of the entry here.
+        // For example, you could use the following code:
+        return entries.indexOf(e)
+    }
+
 }

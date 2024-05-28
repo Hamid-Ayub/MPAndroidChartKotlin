@@ -99,9 +99,9 @@ public class LegendRenderer extends Renderer {
                 if (dataSet instanceof IBarDataSet && ((IBarDataSet) dataSet).isStacked()) {
 
                     IBarDataSet bds = (IBarDataSet) dataSet;
-                    String[] sLabels = bds.getStackLabels();
+                    String[] sLabels = bds.stackLabels();
 
-                    int minEntries = Math.min(clrs.size(), bds.getStackSize());
+                    int minEntries = Math.min(clrs.size(), bds.stackSize());
 
                     for (int j = 0; j < minEntries; j++) {
                         String label;

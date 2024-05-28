@@ -65,8 +65,8 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
         }
 
         int max = (int)(Math.min(
-                Math.ceil((float)dataSet.getEntryCount() * mAnimator.getPhaseX()),
-                (float)dataSet.getEntryCount()));
+                Math.ceil((float) dataSet.getEntryCount() * mAnimator.getPhaseX()),
+                (float) dataSet.getEntryCount()));
 
         for (int i = 0; i < max; i++) {
 

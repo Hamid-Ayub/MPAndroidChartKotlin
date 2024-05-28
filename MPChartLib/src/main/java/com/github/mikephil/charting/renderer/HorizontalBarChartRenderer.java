@@ -46,7 +46,7 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
 
         for (int i = 0; i < mBarBuffers.length; i++) {
             IBarDataSet set = barData.getDataSetByIndex(i);
-            mBarBuffers[i] = new HorizontalBarBuffer(set.getEntryCount() * 4 * (set.isStacked() ? set.getStackSize() : 1),
+            mBarBuffers[i] = new HorizontalBarBuffer(set.getEntryCount() * 4 * (set.isStacked() ? set.stackSize() : 1),
                     barData.getDataSetCount(), set.isStacked());
         }
     }
@@ -58,17 +58,17 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
 
         Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());
 
-        mBarBorderPaint.setColor(dataSet.getBarBorderColor());
-        mBarBorderPaint.setStrokeWidth(Utils.convertDpToPixel(dataSet.getBarBorderWidth()));
+        mBarBorderPaint.setColor(dataSet.barBorderColor());
+        mBarBorderPaint.setStrokeWidth(Utils.convertDpToPixel(dataSet.barBorderWidth()));
 
-        final boolean drawBorder = dataSet.getBarBorderWidth() > 0.f;
+        final boolean drawBorder = dataSet.barBorderWidth() > 0.f;
 
         float phaseX = mAnimator.getPhaseX();
         float phaseY = mAnimator.getPhaseY();
 
         // draw the bar shadow before the values
         if (mChart.isDrawBarShadowEnabled()) {
-            mShadowPaint.setColor(dataSet.getBarShadowColor());
+            mShadowPaint.setColor(dataSet.barShadowColor());
 
             BarData barData = mChart.getBarData();
 

@@ -1,23 +1,22 @@
+package com.github.mikephil.charting.charts
 
-package com.github.mikephil.charting.charts;
-
-import android.content.Context;
-import android.graphics.Canvas;
-import android.util.AttributeSet;
-import android.util.Log;
-
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BubbleData;
-import com.github.mikephil.charting.data.CandleData;
-import com.github.mikephil.charting.data.CombinedData;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.ScatterData;
-import com.github.mikephil.charting.highlight.CombinedHighlighter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.dataprovider.CombinedDataProvider;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.renderer.CombinedChartRenderer;
+import android.content.Context
+import android.graphics.Canvas
+import android.util.AttributeSet
+import android.util.Log
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BubbleData
+import com.github.mikephil.charting.data.CandleData
+import com.github.mikephil.charting.data.CombinedData
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.ScatterData
+import com.github.mikephil.charting.highlight.CombinedHighlighter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.interfaces.dataprovider.CombinedDataProvider
+import com.github.mikephil.charting.interfaces.datasets.IDataSet
+import com.github.mikephil.charting.renderer.CombinedChartRenderer
+import java.util.Objects
 
 /**
  * This chart class allows the combination of lines, bars, scatter and candle
@@ -25,76 +24,65 @@ import com.github.mikephil.charting.renderer.CombinedChartRenderer;
  *
  * @author Philipp Jahoda
  */
-public class CombinedChart extends BarLineChartBase<CombinedData> implements CombinedDataProvider {
-
+class CombinedChart : BarLineChartBase<CombinedData?>, CombinedDataProvider {
     /**
      * if set to true, all values are drawn above their bars, instead of below
      * their top
      */
-    private boolean mDrawValueAboveBar = true;
+    private var mDrawValueAboveBar = true
 
 
     /**
      * flag that indicates whether the highlight should be full-bar oriented, or single-value?
      */
-    protected boolean mHighlightFullBarEnabled = false;
+    protected var mHighlightFullBarEnabled: Boolean = false
 
     /**
      * if set to true, a grey area is drawn behind each bar that indicates the
      * maximum value
      */
-    private boolean mDrawBarShadow = false;
+    private var mDrawBarShadow = false
 
-    protected DrawOrder[] mDrawOrder;
+    protected lateinit var mDrawOrder: Array<DrawOrder>
 
     /**
      * enum that allows to specify the order in which the different data objects
      * for the combined-chart are drawn
      */
-    public enum DrawOrder {
+    enum class DrawOrder {
         BAR, BUBBLE, LINE, CANDLE, SCATTER
     }
 
-    public CombinedChart(Context context) {
-        super(context);
-    }
+    constructor(context: Context?) : super(context)
 
-    public CombinedChart(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
-    public CombinedChart(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
+    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
-    @Override
-    protected void init() {
-        super.init();
+    override fun init() {
+        super.init()
 
         // Default values are not ready here yet
-        mDrawOrder = new DrawOrder[]{
-                DrawOrder.BAR, DrawOrder.BUBBLE, DrawOrder.LINE, DrawOrder.CANDLE, DrawOrder.SCATTER
-        };
+        mDrawOrder = arrayOf(DrawOrder.BAR, DrawOrder.BUBBLE, DrawOrder.LINE, DrawOrder.CANDLE, DrawOrder.SCATTER
+        )
 
-        setHighlighter(new CombinedHighlighter(this, this));
+        setHighlighter(CombinedHighlighter(this, this))
 
         // Old default behaviour
-        setHighlightFullBarEnabled(true);
+        isHighlightFullBarEnabled = true
 
-        mRenderer = new CombinedChartRenderer(this, mAnimator, mViewPortHandler);
+        mRenderer = CombinedChartRenderer(this, animator, viewPortHandler)
     }
 
-    @Override
-    public CombinedData getCombinedData() {
-        return mData;
+    override fun getCombinedData(): CombinedData {
+        return mData!!
     }
 
-    @Override
-    public void setData(CombinedData data) {
-        super.setData(data);
-        setHighlighter(new CombinedHighlighter(this, this));
-        ((CombinedChartRenderer)mRenderer).createRenderers();
-        mRenderer.initBuffers();
+    override fun setData(data: CombinedData?) {
+        super.setData(data)
+        setHighlighter(CombinedHighlighter(this, this))
+        (mRenderer as CombinedChartRenderer).createRenderers()
+        (mRenderer as CombinedChartRenderer).initBuffers()
     }
 
     /**
@@ -106,66 +94,52 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
      * @param y
      * @return
      */
-    @Override
-    public Highlight getHighlightByTouchPoint(float x, float y) {
-
+    override fun getHighlightByTouchPoint(x: Float, y: Float): Highlight? {
         if (mData == null) {
-            Log.e(LOG_TAG, "Can't select by touch. No data set.");
-            return null;
+            Log.e(LOG_TAG, "Can't select by touch. No data set.")
+            return null
         } else {
-            Highlight h = getHighlighter().getHighlight(x, y);
-            if (h == null || !isHighlightFullBarEnabled()) return h;
+            val h = highlighter!!.getHighlight(x, y)
+            if (h == null || !isHighlightFullBarEnabled) return h
 
             // For isHighlightFullBarEnabled, remove stackIndex
-            return new Highlight(h.getX(), h.getY(),
-                    h.getXPx(), h.getYPx(),
-                    h.getDataSetIndex(), -1, h.getAxis());
+            return Highlight(h.x, h.y,
+                    h.xPx, h.yPx,
+                    h.dataSetIndex, -1, h.axis)
         }
     }
 
-    @Override
-    public LineData getLineData() {
-        if (mData == null)
-            return null;
-        return mData.getLineData();
+    override fun getLineData(): LineData? {
+        if (mData == null) return null
+        return mData!!.lineData
     }
 
-    @Override
-    public BarData getBarData() {
-        if (mData == null)
-            return null;
-        return mData.getBarData();
+    override fun getBarData(): BarData? {
+        if (mData == null) return null
+        return mData!!.barData
     }
 
-    @Override
-    public ScatterData getScatterData() {
-        if (mData == null)
-            return null;
-        return mData.getScatterData();
+    override fun getScatterData(): ScatterData? {
+        if (mData == null) return null
+        return mData!!.scatterData
     }
 
-    @Override
-    public CandleData getCandleData() {
-        if (mData == null)
-            return null;
-        return mData.getCandleData();
+    override fun getCandleData(): CandleData? {
+        if (mData == null) return null
+        return mData!!.candleData
     }
 
-    @Override
-    public BubbleData getBubbleData() {
-        if (mData == null)
-            return null;
-        return mData.getBubbleData();
+    override fun getBubbleData(): BubbleData? {
+        if (mData == null) return null
+        return mData!!.bubbleData
     }
 
-    @Override
-    public boolean isDrawBarShadowEnabled() {
-        return mDrawBarShadow;
+    override fun isDrawBarShadowEnabled(): Boolean {
+        return mDrawBarShadow
     }
 
-    @Override
-    public boolean isDrawValueAboveBarEnabled() {
-        return mDrawValueAboveBar;
+    override fun isDrawValueAboveBarEnabled(): Boolean {
+        return mDrawValueAboveBar
     }
 
     /**
@@ -174,8 +148,8 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
      *
      * @param enabled
      */
-    public void setDrawValueAboveBar(boolean enabled) {
-        mDrawValueAboveBar = enabled;
+    fun setDrawValueAboveBar(enabled: Boolean) {
+        mDrawValueAboveBar = enabled
     }
 
 
@@ -185,8 +159,8 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
      *
      * @param enabled
      */
-    public void setDrawBarShadow(boolean enabled) {
-        mDrawBarShadow = enabled;
+    fun setDrawBarShadow(enabled: Boolean) {
+        mDrawBarShadow = enabled
     }
 
     /**
@@ -195,78 +169,67 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
      *
      * @param enabled
      */
-    public void setHighlightFullBarEnabled(boolean enabled) {
-        mHighlightFullBarEnabled = enabled;
+    fun setHighlightFullBarEnabled(enabled: Boolean) {
+        mHighlightFullBarEnabled = enabled
     }
 
     /**
      * @return true the highlight operation is be full-bar oriented, false if single-value
      */
-    @Override
-    public boolean isHighlightFullBarEnabled() {
-        return mHighlightFullBarEnabled;
+    override fun isHighlightFullBarEnabled(): Boolean {
+        return mHighlightFullBarEnabled
     }
 
-    /**
-     * Returns the currently set draw order.
-     *
-     * @return
-     */
-    public DrawOrder[] getDrawOrder() {
-        return mDrawOrder;
-    }
-
-    /**
-     * Sets the order in which the provided data objects should be drawn. The
-     * earlier you place them in the provided array, the further they will be in
-     * the background. e.g. if you provide new DrawOrer[] { DrawOrder.BAR,
-     * DrawOrder.LINE }, the bars will be drawn behind the lines.
-     *
-     * @param order
-     */
-    public void setDrawOrder(DrawOrder[] order) {
-        if (order == null || order.length <= 0)
-            return;
-        mDrawOrder = order;
-    }
+    var drawOrder: Array<DrawOrder>?
+        /**
+         * Returns the currently set draw order.
+         *
+         * @return
+         */
+        get() = mDrawOrder
+        /**
+         * Sets the order in which the provided data objects should be drawn. The
+         * earlier you place them in the provided array, the further they will be in
+         * the background. e.g. if you provide new DrawOrer[] { DrawOrder.BAR,
+         * DrawOrder.LINE }, the bars will be drawn behind the lines.
+         *
+         * @param order
+         */
+        set(order) {
+            if (order == null || order.size <= 0) return
+            mDrawOrder = order
+        }
 
     /**
      * draws all MarkerViews on the highlighted positions
      */
-    protected void drawMarkers(Canvas canvas) {
-
+    override fun drawMarkers(canvas: Canvas?) {
         // if there is no marker view or drawing marker is disabled
-        if (mMarker == null || !isDrawMarkersEnabled() || !valuesToHighlight())
-            return;
 
-        for (int i = 0; i < mIndicesToHighlight.length; i++) {
+        if (marker == null || !isDrawMarkersEnabled || !valuesToHighlight()) return
 
-            Highlight highlight = mIndicesToHighlight[i];
+        for (i in Objects.requireNonNull<Array<Highlight?>>(highlighted).indices) {
+            val highlight = highlighted!![i]!!
 
-            IDataSet set = mData.getDataSetByHighlight(highlight);
+            val set: IDataSet<*> = mData!!.getDataSetByHighlight(highlight)
 
-            Entry e = mData.getEntryForHighlight(highlight);
-            if (e == null)
-                continue;
+            val e = mData!!.getEntryForHighlight(highlight) ?: continue
 
-            int entryIndex = set.getEntryIndex(e);
+            val entryIndex = (set as IDataSet<Entry>).getEntryIndex(e)
 
             // make sure entry not null
-            if (entryIndex > set.getEntryCount() * mAnimator.getPhaseX())
-                continue;
+            if (entryIndex > set.entryCount * animator!!.phaseX) continue
 
-            float[] pos = getMarkerPosition(highlight);
+            val pos = getMarkerPosition(highlight)
 
             // check bounds
-            if (!mViewPortHandler.isInBounds(pos[0], pos[1]))
-                continue;
+            if (!viewPortHandler.isInBounds(pos[0], pos[1])) continue
 
             // callbacks to update the content
-            mMarker.refreshContent(e, highlight);
+            marker!!.refreshContent(e, highlight)
 
             // draw the marker
-            mMarker.draw(canvas, pos[0], pos[1]);
+            marker!!.draw(canvas, pos[0], pos[1])
         }
     }
-
 }

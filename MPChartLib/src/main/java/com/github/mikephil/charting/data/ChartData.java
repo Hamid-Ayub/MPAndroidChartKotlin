@@ -737,6 +737,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
     public void setHighlightEnabled(boolean enabled) {
         for (IDataSet set : mDataSets) {
             set.setHighlightEnabled(enabled);
+           // set.isHighlightEnabled = enabled;
         }
     }
 

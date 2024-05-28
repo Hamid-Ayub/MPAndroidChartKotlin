@@ -67,7 +67,7 @@ public class HorizontalBarHighlighter extends BarHighlighter {
 
 		for (Entry e : entries) {
 			MPPointD pixels = mChart.getTransformer(
-					set.getAxisDependency()).getPixelForValues(e.getY(), e.getX());
+                    set.getAxisDependency()).getPixelForValues(e.getY(), e.getX());
 
 			highlights.add(new Highlight(
 					e.getX(), e.getY(),

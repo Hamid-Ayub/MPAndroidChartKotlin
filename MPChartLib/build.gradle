@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 group='com.github.philjay.hami'
 
@@ -18,10 +19,14 @@ android {
         unitTests.returnDefaultValues = true // this prevents "not mocked" error
     }
     namespace 'com.github.mikephil.charting'
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
     implementation 'androidx.annotation:annotation:1.8.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
     testImplementation 'junit:junit:4.13.2'
 }
 

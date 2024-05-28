@@ -431,17 +431,17 @@ public class YAxis extends AxisBase {
         // Discussion: https://github.com/danielgindi/Charts/pull/3650#discussion_r221409991
         if (min > max)
         {
-            if (mCustomAxisMax && mCustomAxisMin)
+            if (isAxisMaxCustom() && isAxisMinCustom())
             {
                 float t = min;
                 min = max;
                 max = t;
             }
-            else if (mCustomAxisMax)
+            else if (isAxisMaxCustom())
             {
                 min = max < 0f ? max * 1.5f : max * 0.5f;
             }
-            else if (mCustomAxisMin)
+            else if (isAxisMinCustom())
             {
                 max = min < 0f ? min * 0.5f : min * 1.5f;
             }
@@ -459,8 +459,8 @@ public class YAxis extends AxisBase {
         range = Math.abs(max - min);
 
         // calc extra spacing
-        this.mAxisMinimum = mCustomAxisMin ? this.mAxisMinimum : min - (range / 100f) * getSpaceBottom();
-        this.mAxisMaximum = mCustomAxisMax ? this.mAxisMaximum : max + (range / 100f) * getSpaceTop();
+        this.mAxisMinimum = isAxisMinCustom() ? this.mAxisMinimum : min - (range / 100f) * getSpaceBottom();
+        this.mAxisMaximum = isAxisMaxCustom() ? this.mAxisMaximum : max + (range / 100f) * getSpaceTop();
 
         this.mAxisRange = Math.abs(this.mAxisMinimum - this.mAxisMaximum);
     }

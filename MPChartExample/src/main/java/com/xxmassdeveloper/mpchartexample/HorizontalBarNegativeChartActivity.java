@@ -216,7 +216,7 @@ public class HorizontalBarNegativeChartActivity extends DemoBase implements OnSe
             }
             case R.id.actionToggleBarBorders: {
                 for (IBarDataSet set : chart.getData().getDataSets())
-                    ((BarDataSet)set).setBarBorderWidth(set.getBarBorderWidth() == 1.f ? 0.f : 1.f);
+                    ((BarDataSet)set).setBarBorderWidth(set.barBorderWidth() == 1.f ? 0.f : 1.f);
 
                 chart.invalidate();
                 break;
@@ -278,8 +278,7 @@ public class HorizontalBarNegativeChartActivity extends DemoBase implements OnSe
         RectF bounds = mOnValueSelectedRectF;
         chart.getBarBounds((BarEntry) e, bounds);
 
-        MPPointF position = chart.getPosition(e, chart.getData().getDataSetByIndex(h.getDataSetIndex())
-                .getAxisDependency());
+        MPPointF position = chart.getPosition(e, chart.getData().getDataSetByIndex(h.getDataSetIndex()).getAxisDependency());
 
         Log.i("bounds", bounds.toString());
         Log.i("position", position.toString());

@@ -32,7 +32,7 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
     protected void drawHighlightLines(Canvas c, float x, float y, ILineScatterCandleRadarDataSet set) {
 
         // set color and stroke-width
-        mHighlightPaint.setColor(set.getHighLightColor());
+        mHighlightPaint.setColor(set.highLightColor());
         mHighlightPaint.setStrokeWidth(set.getHighlightLineWidth());
 
         // draw highlighted lines (if enabled)

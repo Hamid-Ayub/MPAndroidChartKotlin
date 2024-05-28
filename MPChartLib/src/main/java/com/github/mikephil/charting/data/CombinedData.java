@@ -104,7 +104,7 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
                 }
                 else {
                     if (dataset.getYMax() > mRightAxisMax) {
-                        mRightAxisMax = dataset.getYMax();
+                        mRightAxisMax = dataset.getXMax();
                     }
 
                     if (dataset.getYMin() < mRightAxisMin) {
