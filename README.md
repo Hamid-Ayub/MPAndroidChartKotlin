@@ -1,5 +1,10 @@
 Transfering the project to Pure Kotlin
-
+.
+.
+.
+.
+.
+progressing
 
 ---
 ![banner](https://raw.github.com/PhilJay/MPChart/master/design/feature_graphic_smaller.png)
