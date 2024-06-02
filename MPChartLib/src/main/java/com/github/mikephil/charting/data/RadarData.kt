@@ -1,58 +1,38 @@
+package com.github.mikephil.charting.data
 
-package com.github.mikephil.charting.data;
-
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
+import java.util.Arrays
 
 /**
  * Data container for the RadarChart.
  *
  * @author Philipp Jahoda
  */
-public class RadarData extends ChartData<IRadarDataSet> {
+class RadarData : ChartData<IRadarDataSet?> {
+    /**
+     * Sets the labels that should be drawn around the RadarChart at the end of each web line.
+     *
+     * @param labels
+     */
+    var labels: List<String>? = null
 
-    private List<String> mLabels;
+    constructor() : super()
 
-    public RadarData() {
-        super();
-    }
+    constructor(dataSets: List<IRadarDataSet?>?) : super(dataSets)
 
-    public RadarData(List<IRadarDataSet> dataSets) {
-        super(dataSets);
-    }
-
-    public RadarData(IRadarDataSet... dataSets) {
-        super(dataSets);
-    }
+    constructor(vararg dataSets: IRadarDataSet?) : super(*dataSets)
 
     /**
      * Sets the labels that should be drawn around the RadarChart at the end of each web line.
      *
      * @param labels
      */
-    public void setLabels(List<String> labels) {
-        this.mLabels = labels;
+    fun setLabels(vararg labels: String?) {
+        this.labels = Arrays.asList(*labels) as List<String>?
     }
 
-    /**
-     * Sets the labels that should be drawn around the RadarChart at the end of each web line.
-     *
-     * @param labels
-     */
-    public void setLabels(String... labels) {
-        this.mLabels = Arrays.asList(labels);
-    }
-
-    public List<String> getLabels() {
-        return mLabels;
-    }
-
-    @Override
-    public Entry getEntryForHighlight(Highlight highlight) {
-        return getDataSetByIndex(highlight.getDataSetIndex()).getEntryForIndex((int) highlight.getX());
+    override fun getEntryForHighlight(highlight: Highlight): Entry {
+        return getDataSetByIndex(highlight.dataSetIndex)!!.getEntryForIndex(highlight.x.toInt())
     }
 }

@@ -236,11 +236,11 @@ class PieChart : PieRadarChartBase<PieData?> {
 
         val c = centerOffsets
 
-        val shift = mData!!.dataSet.selectionShift
+        val shift = mData!!.dataSet?.selectionShift
 
         // create the circle box that will contain the pie-chart (the bounds of
         // the pie-chart)
-        circleBox!![c.x - radius + shift, c.y - radius + shift, c.x + radius - shift] = c.y + radius - shift
+        circleBox!![c.x - radius + shift!!, c.y - radius + shift, c.x + radius - shift] = c.y + radius - shift
 
         MPPointF.recycleInstance(c)
     }

@@ -1,13 +1,8 @@
+package com.github.mikephil.charting.data
 
-package com.github.mikephil.charting.data;
-
-import android.util.Log;
-
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IPieDataSet;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.util.Log
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.interfaces.datasets.IPieDataSet
 
 /**
  * A PieData object can only represent one DataSet. Unlike all other charts, the
@@ -17,47 +12,39 @@ import java.util.List;
  *
  * @author Philipp Jahoda
  */
-public class PieData extends ChartData<IPieDataSet> {
+class PieData : ChartData<IPieDataSet?> {
+    constructor() : super()
 
-    public PieData() {
-        super();
-    }
+    constructor(dataSet: IPieDataSet?) : super(dataSet)
 
-    public PieData(IPieDataSet dataSet) {
-        super(dataSet);
-    }
-
-    /**
-     * Sets the PieDataSet this data object should represent.
-     *
-     * @param dataSet
-     */
-    public void setDataSet(IPieDataSet dataSet) {
-        mDataSets.clear();
-        mDataSets.add(dataSet);
-        notifyDataChanged();
-    }
-
-    /**
-     * Returns the DataSet this PieData object represents. A PieData object can
-     * only contain one DataSet.
-     *
-     * @return
-     */
-    public IPieDataSet getDataSet() {
-        return mDataSets.get(0);
-    }
-
-    @Override
-    public List<IPieDataSet> getDataSets() {
-        List<IPieDataSet> dataSets = super.getDataSets();
-
-        if (dataSets.size() < 1) {
-            Log.e("MPAndroidChart",
-                    "Found multiple data sets while pie chart only allows one");
+    var dataSet: IPieDataSet?
+        /**
+         * Returns the DataSet this PieData object represents. A PieData object can
+         * only contain one DataSet.
+         *
+         * @return
+         */
+        get() = mDataSets[0]
+        /**
+         * Sets the PieDataSet this data object should represent.
+         *
+         * @param dataSet
+         */
+        set(dataSet) {
+            mDataSets.clear()
+            mDataSets.add(dataSet)
+            notifyDataChanged()
         }
 
-        return dataSets;
+    override fun getDataSets(): List<IPieDataSet> {
+        val dataSets: List<IPieDataSet> = super.getDataSets() as List<IPieDataSet>
+
+        if (dataSets.size < 1) {
+            Log.e("MPAndroidChart",
+                    "Found multiple data sets while pie chart only allows one")
+        }
+
+        return dataSets
     }
 
     /**
@@ -66,35 +53,31 @@ public class PieData extends ChartData<IPieDataSet> {
      * @param index
      * @return
      */
-    @Override
-    public IPieDataSet getDataSetByIndex(int index) {
-        return index == 0 ? getDataSet() : null;
+    override fun getDataSetByIndex(index: Int): IPieDataSet? {
+        return if (index == 0) dataSet!! else null
     }
 
-    @Override
-    public IPieDataSet getDataSetByLabel(String label, boolean ignorecase) {
-        return ignorecase ? label.equalsIgnoreCase(mDataSets.get(0).getLabel()) ? mDataSets.get(0)
-                : null : label.equals(mDataSets.get(0).getLabel()) ? mDataSets.get(0) : null;
+    override fun getDataSetByLabel(label: String, ignorecase: Boolean): IPieDataSet {
+        return if (ignorecase) (if (label.equals(mDataSets[0]!!.label, ignoreCase = true)) mDataSets[0]
+        else null)!! else (if (label == mDataSets[0]!!.label) mDataSets[0] else null)!!
     }
 
-    @Override
-    public Entry getEntryForHighlight(Highlight highlight) {
-        return getDataSet().getEntryForIndex((int) highlight.getX());
+    override fun getEntryForHighlight(highlight: Highlight): Entry {
+        return dataSet!!.getEntryForIndex(highlight.x.toInt())
     }
 
-    /**
-     * Returns the sum of all values in this PieData object.
-     *
-     * @return
-     */
-    public float getYValueSum() {
+    val yValueSum: Float
+        /**
+         * Returns the sum of all values in this PieData object.
+         *
+         * @return
+         */
+        get() {
+            var sum = 0f
 
-        float sum = 0;
-
-        for (int i = 0; i < getDataSet().getEntryCount(); i++)
-            sum += getDataSet().getEntryForIndex(i).getY();
+            for (i in 0 until dataSet!!.entryCount) sum += dataSet!!.getEntryForIndex(i).y
 
 
-        return sum;
-    }
+            return sum
+        }
 }

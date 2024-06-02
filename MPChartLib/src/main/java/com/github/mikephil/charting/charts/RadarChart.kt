@@ -122,7 +122,7 @@ class RadarChart : PieRadarChartBase<RadarData?> {
         super.calcMinMax()
 
         yAxis!!.calculate(mData!!.getYMin(AxisDependency.LEFT), mData!!.getYMax(AxisDependency.LEFT))
-        xAxis!!.calculate(0f, mData!!.maxEntryCountSet.entryCount.toFloat())
+        xAxis!!.calculate(0f, mData!!.maxEntryCountSet!!.entryCount.toFloat())
     }
 
     override fun notifyDataSetChanged() {
@@ -187,7 +187,7 @@ class RadarChart : PieRadarChartBase<RadarData?> {
          *
          * @return
          */
-        get() = 360f / mData!!.maxEntryCountSet.entryCount.toFloat()
+        get() = 360f / mData!!.maxEntryCountSet!!.entryCount.toFloat()
 
     override fun getIndexForAngle(angle: Float): Int {
         // take the current angle of the chart into consideration
@@ -196,7 +196,7 @@ class RadarChart : PieRadarChartBase<RadarData?> {
 
         val sliceangle = sliceAngle
 
-        val max = mData!!.maxEntryCountSet.entryCount
+        val max = mData!!.maxEntryCountSet!!.entryCount
 
         var index = 0
 
