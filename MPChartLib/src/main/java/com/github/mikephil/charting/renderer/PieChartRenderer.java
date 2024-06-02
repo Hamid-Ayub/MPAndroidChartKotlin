@@ -501,7 +501,7 @@ public class PieChartRenderer extends DataRenderer {
 
                 float value = mChart.isUsePercentValuesEnabled() ? entry.getY()
                         / yValueSum * 100f : entry.getY();
-                String entryLabel = entry.getLabel();
+                String entryLabel = entry.label;
 
                 final float sliceXBase = (float) Math.cos(transformedAngle * Utils.FDEG2RAD);
                 final float sliceYBase = (float) Math.sin(transformedAngle * Utils.FDEG2RAD);

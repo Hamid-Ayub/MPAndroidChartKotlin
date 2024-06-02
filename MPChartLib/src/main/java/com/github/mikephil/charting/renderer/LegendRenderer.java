@@ -141,7 +141,7 @@ public class LegendRenderer extends Renderer {
                     for (int j = 0; j < clrs.size() && j < entryCount; j++) {
 
                         computedEntries.add(new LegendEntry(
-                                pds.getEntryForIndex(j).getLabel(),
+                                pds.getEntryForIndex(j).label,
                                 dataSet.getForm(),
                                 dataSet.getFormSize(),
                                 dataSet.getFormLineWidth(),

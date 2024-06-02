@@ -1,122 +1,106 @@
+package com.github.mikephil.charting.data
 
-package com.github.mikephil.charting.data;
+import android.graphics.Color
+import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 
-import android.graphics.Color;
-
-import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class RadarDataSet extends LineRadarDataSet<RadarEntry> implements IRadarDataSet {
-
+class RadarDataSet(yVals: List<RadarEntry>?, label: String?) : LineRadarDataSet<RadarEntry?>(yVals, label), IRadarDataSet {
     /// flag indicating whether highlight circle should be drawn or not
-    protected boolean mDrawHighlightCircleEnabled = false;
+    protected var mDrawHighlightCircleEnabled: Boolean = false
 
-    protected int mHighlightCircleFillColor = Color.WHITE;
+    protected var mHighlightCircleFillColor: Int = Color.WHITE
 
     /// The stroke color for highlight circle.
     /// If Utils.COLOR_NONE, the color of the dataset is taken.
-    protected int mHighlightCircleStrokeColor = ColorTemplate.COLOR_NONE;
+    protected var mHighlightCircleStrokeColor: Int = ColorTemplate.COLOR_NONE
 
-    protected int mHighlightCircleStrokeAlpha = (int) (0.3 * 255);
-    protected float mHighlightCircleInnerRadius = 3.0f;
-    protected float mHighlightCircleOuterRadius = 4.0f;
-    protected float mHighlightCircleStrokeWidth = 2.0f;
-
-    public RadarDataSet(List<RadarEntry> yVals, String label) {
-        super(yVals, label);
+    protected var mHighlightCircleStrokeAlpha: Int = (0.3 * 255).toInt()
+    protected var mHighlightCircleInnerRadius: Float = 3.0f
+    protected var mHighlightCircleOuterRadius: Float = 4.0f
+    protected var mHighlightCircleStrokeWidth: Float = 2.0f
+    override fun getEntryIndex(e: RadarEntry?): Int {
+        return entries.indexOf(e)
     }
 
     /// Returns true if highlight circle should be drawn, false if not
-    @Override
-    public boolean isDrawHighlightCircleEnabled() {
-        return mDrawHighlightCircleEnabled;
+    override fun isDrawHighlightCircleEnabled(): Boolean {
+        return mDrawHighlightCircleEnabled
     }
 
     /// Sets whether highlight circle should be drawn or not
-    @Override
-    public void setDrawHighlightCircleEnabled(boolean enabled) {
-        mDrawHighlightCircleEnabled = enabled;
+    override fun setDrawHighlightCircleEnabled(enabled: Boolean) {
+        mDrawHighlightCircleEnabled = enabled
     }
 
-    @Override
-    public int getHighlightCircleFillColor() {
-        return mHighlightCircleFillColor;
+    override fun getHighlightCircleFillColor(): Int {
+        return mHighlightCircleFillColor
     }
 
-    public void setHighlightCircleFillColor(int color) {
-        mHighlightCircleFillColor = color;
+    fun setHighlightCircleFillColor(color: Int) {
+        mHighlightCircleFillColor = color
     }
 
     /// Returns the stroke color for highlight circle.
     /// If Utils.COLOR_NONE, the color of the dataset is taken.
-    @Override
-    public int getHighlightCircleStrokeColor() {
-        return mHighlightCircleStrokeColor;
+    override fun getHighlightCircleStrokeColor(): Int {
+        return mHighlightCircleStrokeColor
     }
 
     /// Sets the stroke color for highlight circle.
     /// Set to Utils.COLOR_NONE in order to use the color of the dataset;
-    public void setHighlightCircleStrokeColor(int color) {
-        mHighlightCircleStrokeColor = color;
+    fun setHighlightCircleStrokeColor(color: Int) {
+        mHighlightCircleStrokeColor = color
     }
 
-    @Override
-    public int getHighlightCircleStrokeAlpha() {
-        return mHighlightCircleStrokeAlpha;
+    override fun getHighlightCircleStrokeAlpha(): Int {
+        return mHighlightCircleStrokeAlpha
     }
 
-    public void setHighlightCircleStrokeAlpha(int alpha) {
-        mHighlightCircleStrokeAlpha = alpha;
+    fun setHighlightCircleStrokeAlpha(alpha: Int) {
+        mHighlightCircleStrokeAlpha = alpha
     }
 
-    @Override
-    public float getHighlightCircleInnerRadius() {
-        return mHighlightCircleInnerRadius;
+    override fun getHighlightCircleInnerRadius(): Float {
+        return mHighlightCircleInnerRadius
     }
 
-    public void setHighlightCircleInnerRadius(float radius) {
-        mHighlightCircleInnerRadius = radius;
+    fun setHighlightCircleInnerRadius(radius: Float) {
+        mHighlightCircleInnerRadius = radius
     }
 
-    @Override
-    public float getHighlightCircleOuterRadius() {
-        return mHighlightCircleOuterRadius;
+    override fun getHighlightCircleOuterRadius(): Float {
+        return mHighlightCircleOuterRadius
     }
 
-    public void setHighlightCircleOuterRadius(float radius) {
-        mHighlightCircleOuterRadius = radius;
+    fun setHighlightCircleOuterRadius(radius: Float) {
+        mHighlightCircleOuterRadius = radius
     }
 
-    @Override
-    public float getHighlightCircleStrokeWidth() {
-        return mHighlightCircleStrokeWidth;
+    override fun getHighlightCircleStrokeWidth(): Float {
+        return mHighlightCircleStrokeWidth
     }
 
-    public void setHighlightCircleStrokeWidth(float strokeWidth) {
-        mHighlightCircleStrokeWidth = strokeWidth;
+    fun setHighlightCircleStrokeWidth(strokeWidth: Float) {
+        mHighlightCircleStrokeWidth = strokeWidth
     }
 
-    @Override
-    public DataSet<RadarEntry> copy() {
-        List<RadarEntry> entries = new ArrayList<RadarEntry>();
-        for (int i = 0; i < mEntries.size(); i++) {
-            entries.add(mEntries.get(i).copy());
+    override fun copy(): DataSet<RadarEntry?>? {
+        val entries: MutableList<RadarEntry> = ArrayList()
+        for (i in mEntries.indices) {
+            entries.add(mEntries[i]!!.copy())
         }
-        RadarDataSet copied = new RadarDataSet(entries, getLabel());
-        copy(copied);
-        return copied;
+        val copied = RadarDataSet(entries, label)
+        copy(copied)
+        return copied
     }
 
-    protected void copy(RadarDataSet radarDataSet) {
-        super.copy(radarDataSet);
-        radarDataSet.mDrawHighlightCircleEnabled = mDrawHighlightCircleEnabled;
-        radarDataSet.mHighlightCircleFillColor = mHighlightCircleFillColor;
-        radarDataSet.mHighlightCircleInnerRadius = mHighlightCircleInnerRadius;
-        radarDataSet.mHighlightCircleStrokeAlpha = mHighlightCircleStrokeAlpha;
-        radarDataSet.mHighlightCircleStrokeColor = mHighlightCircleStrokeColor;
-        radarDataSet.mHighlightCircleStrokeWidth = mHighlightCircleStrokeWidth;
+    protected fun copy(radarDataSet: RadarDataSet) {
+        super.copy(radarDataSet)
+        radarDataSet.mDrawHighlightCircleEnabled = mDrawHighlightCircleEnabled
+        radarDataSet.mHighlightCircleFillColor = mHighlightCircleFillColor
+        radarDataSet.mHighlightCircleInnerRadius = mHighlightCircleInnerRadius
+        radarDataSet.mHighlightCircleStrokeAlpha = mHighlightCircleStrokeAlpha
+        radarDataSet.mHighlightCircleStrokeColor = mHighlightCircleStrokeColor
+        radarDataSet.mHighlightCircleStrokeWidth = mHighlightCircleStrokeWidth
     }
 }
